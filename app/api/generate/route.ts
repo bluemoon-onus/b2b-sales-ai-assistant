@@ -82,7 +82,7 @@ ${context}
 
     return NextResponse.json({
       email,
-      sources: docs.map((d) => ({ type: d.metadata.type, preview: d.content.slice(0, 80) })),
+      sources: docs.map((d: { content: string; metadata: { type: string } }) => ({ type: d.metadata.type, preview: d.content.slice(0, 80) })),
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : "알 수 없는 오류";
