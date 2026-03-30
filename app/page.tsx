@@ -27,7 +27,7 @@ const EMAIL_TYPES = {
 
 const UI = {
   ko: {
-    title: "SalesAI",
+    title: "Sales AI Assistant",
     subtitle: "고객 정보를 입력하면 개인화된 영업 이메일을 자동 생성합니다",
     sectionTitle: "고객 정보 입력",
     companyLabel: "회사명",
@@ -43,7 +43,7 @@ const UI = {
     sourcesLabel: "참고한 제품 자료",
   },
   en: {
-    title: "SalesAI",
+    title: "Sales AI Assistant",
     subtitle: "Enter customer info to auto-generate a personalized sales email",
     sectionTitle: "Customer Information",
     companyLabel: "Company Name",
