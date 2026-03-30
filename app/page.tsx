@@ -22,6 +22,7 @@ const INDUSTRIES = [
 type Source = { type: string; preview: string };
 
 export default function Home() {
+  const [mode, setMode] = useState<"claude" | "openai">("claude");
   const [company, setCompany] = useState("");
   const [industry, setIndustry] = useState(INDUSTRIES[0]);
   const [needs, setNeeds] = useState("");
@@ -66,7 +67,7 @@ export default function Home() {
       const res = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ company, industry, needs }),
+        body: JSON.stringify({ company, industry, needs, mode }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "알 수 없는 오류");
@@ -109,9 +110,39 @@ export default function Home() {
       <main className="mx-auto max-w-3xl px-6 py-10 space-y-8">
         {/* 입력 폼 */}
         <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-          <h2 className="mb-5 text-base font-semibold text-gray-800">
-            고객 정보 입력
-          </h2>
+          <div className="mb-5 flex items-center justify-between">
+            <h2 className="text-base font-semibold text-gray-800">고객 정보 입력</h2>
+            <div className="flex rounded-lg border border-gray-200 overflow-hidden text-sm">
+              <button
+                type="button"
+                onClick={() => setMode("claude")}
+                className={`px-3 py-1.5 flex items-center gap-1.5 transition ${
+                  mode === "claude"
+                    ? "bg-blue-600 text-white"
+                    : "bg-white text-gray-600 hover:bg-gray-50"
+                }`}
+              >
+                Claude
+                <span className={`text-xs px-1.5 py-0.5 rounded-full font-medium ${
+                  mode === "claude" ? "bg-blue-500 text-blue-100" : "bg-gray-100 text-gray-500"
+                }`}>RAG</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setMode("openai")}
+                className={`px-3 py-1.5 flex items-center gap-1.5 border-l border-gray-200 transition ${
+                  mode === "openai"
+                    ? "bg-emerald-600 text-white"
+                    : "bg-white text-gray-600 hover:bg-gray-50"
+                }`}
+              >
+                OpenAI
+                <span className={`text-xs px-1.5 py-0.5 rounded-full font-medium ${
+                  mode === "openai" ? "bg-emerald-500 text-emerald-100" : "bg-gray-100 text-gray-500"
+                }`}>RAG + 파인튜닝</span>
+              </button>
+            </div>
+          </div>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="mb-1.5 block text-sm font-medium text-gray-700">
