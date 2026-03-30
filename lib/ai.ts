@@ -11,9 +11,10 @@ export const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
-export const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// 빌드 시 키 미존재 에러 방지 — 런타임에만 초기화
+export function getOpenAI() {
+  return new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+}
 
 export const CLAUDE_MODEL = "claude-haiku-4-5-20251001";
 export const OPENAI_FINETUNED_MODEL = process.env.OPENAI_FINETUNED_MODEL ?? "gpt-4o-mini-2024-07-18";

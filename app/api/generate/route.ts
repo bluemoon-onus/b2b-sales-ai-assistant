@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import {
   anthropic,
-  openai,
+  getOpenAI,
   createEmbedding,
   CLAUDE_MODEL,
   OPENAI_FINETUNED_MODEL,
@@ -79,7 +79,7 @@ export async function POST(req: NextRequest) {
 
     if (mode === "openai") {
       // 2a. OpenAI 파인튜닝 모델
-      const completion = await openai.chat.completions.create({
+      const completion = await getOpenAI().chat.completions.create({
         model: OPENAI_FINETUNED_MODEL,
         messages: [
           { role: "system", content: SYSTEM_PROMPT },
