@@ -33,7 +33,7 @@ const UI = {
     companyLabel: "회사명",
     companyPlaceholder: "예: ABC제조",
     industryLabel: "업종",
-    emailTypeLabel: "지원 초안 유형",
+    emailTypeLabel: "이메일 초안 유형",
     keywordsLabel: "추가 내용 / 키워드",
     keywordsPlaceholder: "예: 최근 펀딩 이슈, 경쟁사 대비 강조할 점, 특정 기능 언급 등",
     submitBtn: "이메일 초안 생성",
@@ -84,7 +84,6 @@ export default function Home() {
   const emailTypes = EMAIL_TYPES[lang];
   const ui = UI[lang];
 
-  // Reset selects when language changes
   useEffect(() => {
     setIndustry(INDUSTRIES[lang][0]);
     setEmailType(EMAIL_TYPES[lang][0]);
@@ -147,82 +146,144 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="border-b border-gray-200 bg-white">
-        <div className="mx-auto max-w-3xl px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="text-xl font-bold text-gray-900">{ui.title}</span>
-              <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
-                Beta
-              </span>
+    <div className="relative min-h-screen overflow-x-hidden" style={{ background: "#f8f7ff" }}>
+      {/* Background blobs */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0 z-0"
+        style={{
+          background:
+            "radial-gradient(ellipse 70% 50% at 0% 0%, rgba(124,58,237,0.08) 0%, transparent 60%), radial-gradient(ellipse 60% 45% at 100% 100%, rgba(14,165,233,0.08) 0%, transparent 55%)",
+        }}
+      />
+
+      {/* Header */}
+      <header
+        className="relative z-10 border-b"
+        style={{
+          borderColor: "rgba(124,58,237,0.1)",
+          background: "rgba(248,247,255,0.85)",
+          backdropFilter: "blur(20px)",
+        }}
+      >
+        <div className="mx-auto max-w-2xl px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            {/* Logo mark */}
+            <div
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-white text-sm font-bold"
+              style={{ background: "linear-gradient(135deg, #7c3aed, #0ea5e9)" }}
+            >
+              S
             </div>
-            {/* Language toggle */}
-            <div className="flex rounded-lg border border-gray-200 overflow-hidden text-sm">
-              <button
-                type="button"
-                onClick={() => setLang("ko")}
-                className={`px-3 py-1.5 transition ${
-                  lang === "ko" ? "bg-gray-800 text-white" : "bg-white text-gray-600 hover:bg-gray-50"
-                }`}
-              >
-                한국어
-              </button>
-              <button
-                type="button"
-                onClick={() => setLang("en")}
-                className={`px-3 py-1.5 border-l border-gray-200 transition ${
-                  lang === "en" ? "bg-gray-800 text-white" : "bg-white text-gray-600 hover:bg-gray-50"
-                }`}
-              >
-                English
-              </button>
-            </div>
+            <span className="text-base font-semibold tracking-tight" style={{ color: "#1a1730" }}>
+              {ui.title}
+            </span>
+            <span
+              className="rounded-full px-2 py-0.5 text-xs font-medium"
+              style={{
+                background: "rgba(124,58,237,0.1)",
+                color: "#7c3aed",
+                border: "1px solid rgba(124,58,237,0.2)",
+              }}
+            >
+              Beta
+            </span>
           </div>
-          <p className="mt-0.5 text-sm text-gray-500">{ui.subtitle}</p>
+
+          {/* Language toggle */}
+          <div
+            className="flex rounded-lg overflow-hidden text-xs font-medium"
+            style={{ border: "1px solid rgba(124,58,237,0.15)" }}
+          >
+            {(["ko", "en"] as Lang[]).map((l, idx) => (
+              <button
+                key={l}
+                type="button"
+                onClick={() => setLang(l)}
+                className="px-3 py-1.5 transition-all"
+                style={{
+                  background: lang === l ? "linear-gradient(135deg,#7c3aed,#4f46e5)" : "transparent",
+                  color: lang === l ? "#fff" : "#9188b0",
+                  borderLeft: idx === 1 ? "1px solid rgba(124,58,237,0.15)" : undefined,
+                }}
+              >
+                {l === "ko" ? "한국어" : "English"}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="mx-auto max-w-2xl px-6 pb-3">
+          <p className="text-xs" style={{ color: "#9188b0" }}>{ui.subtitle}</p>
         </div>
       </header>
 
-      <main className="mx-auto max-w-3xl px-6 py-10 space-y-8">
-        {/* 입력 폼 */}
-        <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="mb-5 flex items-center justify-between">
-            <h2 className="text-base font-semibold text-gray-800">{ui.sectionTitle}</h2>
-            <div className="flex rounded-lg border border-gray-200 overflow-hidden text-sm">
+      <main className="relative z-10 mx-auto max-w-2xl px-6 py-10 space-y-6">
+        {/* Input card */}
+        <section
+          className="glass-card rounded-2xl p-6"
+          style={{ boxShadow: "0 4px 24px rgba(124,58,237,0.08), 0 1px 4px rgba(124,58,237,0.06)" }}
+        >
+          {/* Section header + model toggle */}
+          <div className="mb-6 flex items-center justify-between">
+            <h2 className="text-sm font-semibold tracking-wide uppercase" style={{ color: "#1a1730", letterSpacing: "0.07em" }}>
+              {ui.sectionTitle}
+            </h2>
+
+            <div
+              className="flex rounded-xl overflow-hidden text-xs font-semibold"
+              style={{ border: "1px solid rgba(124,58,237,0.15)" }}
+            >
               <button
                 type="button"
                 onClick={() => setMode("claude")}
-                className={`px-3 py-1.5 flex items-center gap-1.5 transition ${
-                  mode === "claude"
-                    ? "bg-blue-600 text-white"
-                    : "bg-white text-gray-600 hover:bg-gray-50"
-                }`}
+                className="flex items-center gap-1.5 px-3 py-1.5 transition-all"
+                style={{
+                  background: mode === "claude" ? "linear-gradient(135deg,#7c3aed,#4f46e5)" : "transparent",
+                  color: mode === "claude" ? "#fff" : "#9188b0",
+                  boxShadow: mode === "claude" ? "0 2px 10px rgba(124,58,237,0.3)" : undefined,
+                }}
               >
                 Claude
-                <span className={`text-xs px-1.5 py-0.5 rounded-full font-medium ${
-                  mode === "claude" ? "bg-blue-500 text-blue-100" : "bg-gray-100 text-gray-500"
-                }`}>RAG</span>
+                <span
+                  className="rounded-full px-1.5 py-0.5 text-[10px]"
+                  style={{
+                    background: mode === "claude" ? "rgba(255,255,255,0.25)" : "rgba(124,58,237,0.08)",
+                    color: mode === "claude" ? "#fff" : "#9188b0",
+                  }}
+                >
+                  RAG
+                </span>
               </button>
               <button
                 type="button"
                 onClick={() => setMode("openai")}
-                className={`px-3 py-1.5 flex items-center gap-1.5 border-l border-gray-200 transition ${
-                  mode === "openai"
-                    ? "bg-emerald-600 text-white"
-                    : "bg-white text-gray-600 hover:bg-gray-50"
-                }`}
+                className="flex items-center gap-1.5 px-3 py-1.5 transition-all"
+                style={{
+                  background: mode === "openai" ? "linear-gradient(135deg,#059669,#0ea5e9)" : "transparent",
+                  color: mode === "openai" ? "#fff" : "#9188b0",
+                  boxShadow: mode === "openai" ? "0 2px 10px rgba(5,150,105,0.3)" : undefined,
+                  borderLeft: "1px solid rgba(124,58,237,0.15)",
+                }}
               >
                 OpenAI
-                <span className={`text-xs px-1.5 py-0.5 rounded-full font-medium ${
-                  mode === "openai" ? "bg-emerald-500 text-emerald-100" : "bg-gray-100 text-gray-500"
-                }`}>{lang === "ko" ? "RAG + 파인튜닝" : "RAG + Fine-tuned"}</span>
+                <span
+                  className="rounded-full px-1.5 py-0.5 text-[10px]"
+                  style={{
+                    background: mode === "openai" ? "rgba(255,255,255,0.25)" : "rgba(124,58,237,0.08)",
+                    color: mode === "openai" ? "#fff" : "#9188b0",
+                  }}
+                >
+                  {lang === "ko" ? "파인튜닝" : "Fine-tuned"}
+                </span>
               </button>
             </div>
           </div>
+
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Company */}
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-gray-700">
-                {ui.companyLabel} <span className="text-red-500">*</span>
+              <label className="mb-1.5 block text-xs font-medium" style={{ color: "#6b5fa0" }}>
+                {ui.companyLabel} <span style={{ color: "#ef4444" }}>*</span>
               </label>
               <input
                 type="text"
@@ -230,46 +291,59 @@ export default function Home() {
                 onChange={(e) => setCompany(e.target.value)}
                 placeholder={ui.companyPlaceholder}
                 required
-                className="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 placeholder-gray-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                className="light-input w-full rounded-xl px-4 py-2.5 text-sm"
               />
             </div>
 
+            {/* Industry */}
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-gray-700">
-                {ui.industryLabel} <span className="text-red-500">*</span>
+              <label className="mb-1.5 block text-xs font-medium" style={{ color: "#6b5fa0" }}>
+                {ui.industryLabel} <span style={{ color: "#ef4444" }}>*</span>
               </label>
-              <select
-                value={industry}
-                onChange={(e) => setIndustry(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-              >
-                {industries.map((ind) => (
-                  <option key={ind} value={ind}>
-                    {ind}
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  value={industry}
+                  onChange={(e) => setIndustry(e.target.value)}
+                  className="light-select w-full rounded-xl px-4 py-2.5 text-sm pr-10"
+                >
+                  {industries.map((ind) => (
+                    <option key={ind} value={ind}>{ind}</option>
+                  ))}
+                </select>
+                <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" style={{ color: "#9188b0" }}>
+                  <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
             </div>
 
+            {/* Email type */}
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-gray-700">
-                {ui.emailTypeLabel} <span className="text-red-500">*</span>
+              <label className="mb-1.5 block text-xs font-medium" style={{ color: "#6b5fa0" }}>
+                {ui.emailTypeLabel} <span style={{ color: "#ef4444" }}>*</span>
               </label>
-              <select
-                value={emailType}
-                onChange={(e) => setEmailType(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-              >
-                {emailTypes.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  value={emailType}
+                  onChange={(e) => setEmailType(e.target.value)}
+                  className="light-select w-full rounded-xl px-4 py-2.5 text-sm pr-10"
+                >
+                  {emailTypes.map((t) => (
+                    <option key={t} value={t}>{t}</option>
+                  ))}
+                </select>
+                <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" style={{ color: "#9188b0" }}>
+                  <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
             </div>
 
+            {/* Keywords */}
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-gray-700">
+              <label className="mb-1.5 block text-xs font-medium" style={{ color: "#6b5fa0" }}>
                 {ui.keywordsLabel}
               </label>
               <input
@@ -277,27 +351,44 @@ export default function Home() {
                 value={keywords}
                 onChange={(e) => setKeywords(e.target.value)}
                 placeholder={ui.keywordsPlaceholder}
-                className="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 placeholder-gray-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                className="light-input w-full rounded-xl px-4 py-2.5 text-sm"
               />
             </div>
 
+            {/* Submit */}
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+              className="glow-btn w-full rounded-xl px-4 py-3 text-sm font-semibold text-white"
             >
-              {ui.submitBtn}
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                  </svg>
+                  {steps[stepIndex]?.label}
+                </span>
+              ) : (
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  {ui.submitBtn}
+                </span>
+              )}
             </button>
 
+            {/* Progress */}
             {loading && (
-              <div className="space-y-2">
-                <div className="flex justify-between text-xs text-gray-500">
+              <div className="space-y-2 pt-1">
+                <div className="flex justify-between text-xs" style={{ color: "#9188b0" }}>
                   <span>{steps[stepIndex].label}</span>
                   <span>{progress}%</span>
                 </div>
-                <div className="h-1.5 w-full rounded-full bg-gray-200 overflow-hidden">
+                <div className="h-1 w-full rounded-full overflow-hidden" style={{ background: "rgba(124,58,237,0.1)" }}>
                   <div
-                    className="h-full rounded-full bg-blue-500 transition-all duration-700 ease-in-out"
+                    className="progress-glow h-full rounded-full transition-all duration-700 ease-in-out"
                     style={{ width: `${progress}%` }}
                   />
                 </div>
@@ -306,27 +397,42 @@ export default function Home() {
           </form>
         </section>
 
-        {/* 에러 */}
+        {/* Error */}
         {error && (
-          <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          <div
+            className="rounded-xl px-4 py-3 text-sm"
+            style={{
+              background: "rgba(239,68,68,0.06)",
+              border: "1px solid rgba(239,68,68,0.2)",
+              color: "#dc2626",
+            }}
+          >
             {error}
           </div>
         )}
 
-        {/* 결과 */}
+        {/* Result */}
         {email && (
-          <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+          <section
+            className="glass-card rounded-2xl p-6"
+            style={{ boxShadow: "0 4px 24px rgba(124,58,237,0.08), 0 1px 4px rgba(124,58,237,0.06)" }}
+          >
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-base font-semibold text-gray-800">
+              <h2 className="text-sm font-semibold tracking-wide uppercase" style={{ color: "#1a1730", letterSpacing: "0.07em" }}>
                 {ui.resultTitle}
               </h2>
               <button
                 onClick={handleCopy}
-                className="flex items-center gap-1.5 rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-600 transition hover:border-gray-400 hover:text-gray-900"
+                className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all"
+                style={{
+                  background: copied ? "rgba(34,197,94,0.1)" : "rgba(124,58,237,0.07)",
+                  border: copied ? "1px solid rgba(34,197,94,0.3)" : "1px solid rgba(124,58,237,0.15)",
+                  color: copied ? "#16a34a" : "#7c3aed",
+                }}
               >
                 {copied ? (
                   <>
-                    <svg className="h-3.5 w-3.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                     {ui.copiedBtn}
@@ -342,13 +448,20 @@ export default function Home() {
               </button>
             </div>
 
-            <pre className="whitespace-pre-wrap rounded-lg bg-gray-50 p-4 text-sm leading-relaxed text-gray-800 font-sans">
+            <pre
+              className="whitespace-pre-wrap rounded-xl p-4 text-sm leading-relaxed font-sans"
+              style={{
+                background: "rgba(124,58,237,0.04)",
+                border: "1px solid rgba(124,58,237,0.08)",
+                color: "#2d2150",
+              }}
+            >
               {email}
             </pre>
 
             {sources.length > 0 && (
               <div className="mt-4">
-                <p className="mb-2 text-xs font-medium text-gray-500">
+                <p className="mb-2 text-xs font-medium" style={{ color: "#9188b0" }}>
                   {ui.sourcesLabel}
                 </p>
                 <div className="flex flex-wrap gap-2">
@@ -356,7 +469,12 @@ export default function Home() {
                     <span
                       key={i}
                       title={s.preview}
-                      className="rounded-full border border-gray-200 bg-gray-50 px-2.5 py-0.5 text-xs text-gray-500"
+                      className="rounded-full px-2.5 py-0.5 text-xs"
+                      style={{
+                        background: "rgba(124,58,237,0.08)",
+                        border: "1px solid rgba(124,58,237,0.18)",
+                        color: "#7c3aed",
+                      }}
                     >
                       {s.type.toUpperCase()}
                     </span>
@@ -367,6 +485,13 @@ export default function Home() {
           </section>
         )}
       </main>
+
+      {/* Footer */}
+      <footer className="relative z-10 mt-10 pb-8 text-center">
+        <p className="text-xs" style={{ color: "#c4bde0" }}>
+          Powered by Claude &amp; OpenAI · RAG + Fine-tuning
+        </p>
+      </footer>
     </div>
   );
 }
